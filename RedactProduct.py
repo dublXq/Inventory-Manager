@@ -26,7 +26,10 @@ class RedactProduct:
                     print(f"Вы выбрали -> {item}")
                     break
             word_db = input("Введите новое значение: ")
-            Backend.MainBackendProject.DB[self.id_product][int(key) - 2] = word_db
+            if key == "1":
+                Backend.MainBackendProject.DB[word_db] = Backend.MainBackendProject.DB.pop(key)
+            else:
+                Backend.MainBackendProject.DB[self.id_product][int(key) - 2] = word_db
             return Backend.MainBackendProject.DB
 
     def choice_info_in_db(self, value_redaction):
@@ -37,13 +40,13 @@ class RedactProduct:
         if value_redaction is not None:
             value = Backend.MainBackendProject.DB[value_redaction]
             name, amount, brand, opt, retail = value
-            print(f"Мы вошли в БД по ID -> {value_redaction}.\nВыберите что необходимо изменить.\n"
+            print(f"Мы вошли в БД по ID -> {value_redaction}.\nВыберите что необходимо изменить.\n------------------------\n"
                   f"1. ID товара: {value_redaction}\n"
                   f"2. Название: {name}\n"
                   f"3. Количество: {amount}\n"
                   f"4. Бренд | Марка: {brand}\n"
                   f"5. Оптовая цена: {opt}\n"
-                  f"6. Розничная цена: {retail}\n")
+                  f"6. Розничная цена: {retail}\n------------------------\n")
             self.word_db = input("Ввод: ")
             return self.word_db, value_redaction, self.redaction_method(self.word_db)
         else:
