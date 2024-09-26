@@ -1,15 +1,15 @@
-import BackendInfo
-
+import backend_info
 path = "DataBaseProduct.txt"
 
-
 class SaveData:
+    """Модуль предназначен для работы с данными в словаре BackendInfo.DB.
+    save_all_data_in_db() = перебирает весь словарь DB, и записывает по шаблону в txt файл"""
     time_result = None
 
     @staticmethod
     def save_all_data_in_db():
         with open(path, "w", encoding="utf-8") as file:
-            for key, el1 in BackendInfo.BackendInfo.DB.items():
+            for key, el1 in backend_info.BackendInfo.DB.items():
                 file.write(f"\n------------------------\n"
                            f"ID: {str(key)} \n"
                            f"Название: {el1[0]} \n"
@@ -33,7 +33,6 @@ class SaveData:
         brand = None
         opt = None
         retail = None
-        marja = None
         for item in time_result:
             item = item.strip("\n")
             if "ID:" in item:
@@ -55,7 +54,7 @@ class SaveData:
                 retail = item.split("Розничная цена:")
                 retail = str(retail[1]).strip()
                 time_result = [name, amount, brand, opt, retail]
-                BackendInfo.BackendInfo.DB[indexes] = time_result
+                backend_info.BackendInfo.DB[indexes] = time_result
                 time_result = None
 
-        return BackendInfo.BackendInfo.DB, time_result
+        return backend_info.BackendInfo.DB, time_result

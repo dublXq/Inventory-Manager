@@ -1,6 +1,11 @@
-import BackendInfo
-import SaveData
+import backend_info
+import save_data
 
+def short_description_db():
+    for key, el1 in backend_info.BackendInfo.DB.items():
+        print("-------------------------------------"
+        "\n| " + str(key) + " | Название: " + el1[0] + f" | Бренд: {el1[2]}\n"
+        f"-------------------------------------")
 
 class MainBackendProject:
 
@@ -27,32 +32,34 @@ class MainBackendProject:
                 name_product, amount_product, brand_product,
                 opt_price_product, retail_price_product):
             # Если все хорошо, тогда переменной TIME_VALUE присваиваем строку значений через "|"
-            BackendInfo.BackendInfo.time_value = (f"{name_product}|{amount_product}|"
+            backend_info.BackendInfo.time_value = (f"{name_product}|{amount_product}|"
                                f"{brand_product}|{opt_price_product}|"
                                f"{retail_price_product}")
-            return BackendInfo.BackendInfo.time_value
+            return backend_info.BackendInfo.time_value
+        else:
+            print("Проверьте пожалуйста еще раз, все ли вы правильно прописали. Возникла синтаксическая ошибка")
 
 
 class SearchProduct(MainBackendProject):
     @classmethod
     def search_product_in_db(cls, key):
-        for i in BackendInfo.BackendInfo.DB.keys():
+        for i in backend_info.BackendInfo.DB.keys():
             if i == key:
                 return True
 
     @classmethod
     def search_info_product(cls, key):
-        for ID in BackendInfo.BackendInfo.DB:
-            if ID == key:
-                value = BackendInfo.BackendInfo.DB[ID]
+        for id_ in backend_info.BackendInfo.DB:
+            if id_ == key:
+                value = backend_info.BackendInfo.DB[id_]
                 name, amount, brand, opt, retail = value
-                print(f"1. ID товара: {ID}\n"
+                print(f"1. ID товара: {id_}\n"
                       f"2. Название: {name}\n"
                       f"3. Количество: {amount}\n"
                       f"4. Бренд | Марка: {brand}\n"
                       f"5. Оптовая цена: {opt}\n"
                       f"6. Розничная цена: {retail}\n"
-                      f"7. Маржа: {int(retail) - int(opt)}")
+                      f"Маржа -> {int(retail) - int(opt)}")
 
     @staticmethod
     def search_product_to_id():
@@ -69,12 +76,21 @@ class SearchProduct(MainBackendProject):
                 print("Товар успешно найден!\nТовар: \n------------------------")
                 SearchProduct.search_info_product(val)
                 print("------------------------")
+            else:
+                print("\n------------------------------------------------------------------------------\n"
+                      "Такого ID нет. Повторите попытку. Если не помните ID, лучше выберете 2-й вариант\n"
+                      "------------------------------------------------------------------------------\n")
         elif val == "2":
-            Main.short_description_db()
+            short_description_db()
             val = input("Введите ID товара: ")
-            print("Товар: \n------------------------")
-            SearchProduct.search_info_product(val)
-            print("------------------------")
+            if val in backend_info.BackendInfo.DB.keys():
+                print("Товар: \n------------------------")
+                SearchProduct.search_info_product(val)
+                print("------------------------")
+            else:
+                print("\n-------------------------------------------------\n"
+                      "Ошибка: Такого ID нет. Проверьте пожалуйста еще раз\n"
+                      "---------------------------------------------------\n")
         else:
             print("Вы вышли за предел диапазона. Повторите пожалуйста попытку. [ Диапазон: 1-2 ]")
 
@@ -93,7 +109,7 @@ class DeleteProduct:
     @staticmethod
     def delete_method(id_product):
         """Метод, который удаляет товар по ID"""
-        del BackendInfo.BackendInfo.DB[id_product]
+        del backend_info.BackendInfo.DB[id_product]
 
 
 class RedactProduct:
@@ -102,11 +118,11 @@ class RedactProduct:
     def __init__(self, value_redaction):
         self.value_redaction = value_redaction
         self.id_product = self.value_redaction
-        self.name = BackendInfo.BackendInfo.DB[self.id_product][0]
-        self.amount = BackendInfo.BackendInfo.DB[self.id_product][1]
-        self.brand = BackendInfo.BackendInfo.DB[self.id_product][2]
-        self.opt = BackendInfo.BackendInfo.DB[self.id_product][3]
-        self.retail = BackendInfo.BackendInfo.DB[self.id_product][4]
+        self.name = backend_info.BackendInfo.DB[self.id_product][0]
+        self.amount = backend_info.BackendInfo.DB[self.id_product][1]
+        self.brand = backend_info.BackendInfo.DB[self.id_product][2]
+        self.opt = backend_info.BackendInfo.DB[self.id_product][3]
+        self.retail = backend_info.BackendInfo.DB[self.id_product][4]
 
     def redaction_method(self, word_db):
         self.word_db = word_db
@@ -126,10 +142,10 @@ class RedactProduct:
                         break
                 word_db = input("Введите новое значение: ")
                 if key == "1":
-                    BackendInfo.BackendInfo.DB[word_db] = BackendInfo.BackendInfo.DB.pop(key)
+                    backend_info.BackendInfo.DB[word_db] = backend_info.BackendInfo.DB.pop(key)
                 else:
-                    BackendInfo.BackendInfo.DB[self.id_product][int(key) - 2] = word_db
-                return BackendInfo.BackendInfo.DB
+                    backend_info.BackendInfo.DB[self.id_product][int(key) - 2] = word_db
+                return backend_info.BackendInfo.DB
 
     def choice_info_in_db(self, value_redaction):
         """Задача этого метода:
@@ -137,7 +153,7 @@ class RedactProduct:
         2. Передать в переменную word_db это значение, для дальнейшего изменения"""
         self.value_redaction = value_redaction
         if value_redaction is not None:
-            value = BackendInfo.BackendInfo.DB[value_redaction]
+            value = backend_info.BackendInfo.DB[value_redaction]
             name, amount, brand, opt, retail = value
             print(
                 f"Мы вошли в БД по ID -> {value_redaction}.\nВыберите что необходимо изменить.\n------------------------\n"
@@ -164,30 +180,27 @@ class AddProduct(CheckType, MainBackendProject):
         name, amount, brand, opt, retail = value
         if CheckType.check_type_product(name, amount, brand, opt, retail):
             value_list = list(value)
-            BackendInfo.BackendInfo.DB[key] = value_list
+            backend_info.BackendInfo.DB[key] = value_list
         else:
-            print("Проверьте пожалуйста введенные вами данные. Произошла ошибка.")
+            print("\n-----------------------------------------------------------\n"
+                  "Проверьте пожалуйста введенные вами данные. Произошла ошибка.\n"
+                  "-------------------------------------------------------------\n")
 
     @staticmethod
     def add_get_product(key):
-        return BackendInfo.BackendInfo.DB[key]
+        return backend_info.BackendInfo.DB[key]
 
 if __name__ == '__main__':
 
     class Main(AddProduct, RedactProduct, DeleteProduct, CheckType, SearchProduct, MainBackendProject):
         backend = MainBackendProject()
         delete = DeleteProduct()
-        backend_info = BackendInfo.BackendInfo
+        backend_info = backend_info.BackendInfo
 
-        @staticmethod
-        def short_description_db():
-            for key, el1 in BackendInfo.BackendInfo.DB.items():
-                print("-------------------------------------"
-                      "\n| " + str(key) + " | Название: " + el1[0] + f" | Бренд: {el1[2]}\n"
-                    f"-------------------------------------")
 
-        SaveData.SaveData.read_db()
-        SaveData.SaveData.write_db(SaveData.SaveData.time_result)
+
+        save_data.SaveData.read_db()
+        save_data.SaveData.write_db(save_data.SaveData.time_result)
 
         print("Добро пожаловать в главное меню! Вас приветствует Менеджер товаров.\n"
               "Я умею: Добавлять товары в БД, удалять по ID, редактировать товары по необходимости\n"
@@ -219,19 +232,22 @@ if __name__ == '__main__':
                         backend.opt_price_product = input("Оптовая цена: ")
                         backend.retail_price_product = input("Розничная цена: ")
 
-                        print(f"\nПроверка: Все ли правильно было заполнено ?\n------------------------\n"
+                        print(f"\nПроверка: Все ли правильно было заполнено ?"
+                              f"\n------------------------\n"
                               f"ID товара: {backend.id_product}\n"
                               f"Название: {backend.name_product}\n"
                               f"Количество: {backend.amount_product}\n"
                               f"Бренд | Марка: {backend.brand_product}\n"
                               f"Оптовая цена: {backend.opt_price_product}\n"
-                              f"Розничная цена: {backend.retail_price_product}\n------------------------")
+                              f"Розничная цена: {backend.retail_price_product}\n"
+                              f"------------------------\n")
                         val = input("1.Да\n2.Нет\nВвод: ")
                         if val == "1":
                             backend.preparation_zip_info_str(
-                                backend.name_product,backend.amount_product, backend.brand_product,
-                                backend.opt_price_product,backend.retail_price_product)
-                        AddProduct.add_set_product(backend.id_product, backend_info.time_value)
+                                backend.name_product, backend.amount_product, backend.brand_product,
+                                backend.opt_price_product, backend.retail_price_product)
+                            if backend_info.time_value is not None:
+                                AddProduct.add_set_product(backend.id_product, backend_info.time_value)
                     case "2":
                         print("Мы перешли в раздел -> Редактирования.\n\n"
                               "Для правильного редактирования, следуйте пожалуйста инструкции:\n"
@@ -241,8 +257,11 @@ if __name__ == '__main__':
                               "4.Выберите необходимую вам категорию, для редактирования, и нажмите -> Сохранить\n")
                         short_description_db()
                         value_redaction = input("\nВвод: ")
-                        redact = RedactProduct(value_redaction)
-                        redact.choice_info_in_db(value_redaction)
+                        if value_redaction in backend_info.DB.keys():
+                            redact = RedactProduct(value_redaction)
+                            redact.choice_info_in_db(value_redaction)
+                        else:
+                            print("Такого ID нет. Проверьте пожалуйста еще раз, и повторите попытку")
                     case "3":
                         print("Мы перешли в раздел -> Удаления.\n\n"
                               "Для корректного удаления, следуйте пожалуйста инструкции:\n"
@@ -251,15 +270,20 @@ if __name__ == '__main__':
                               "3.Выберите необходимый товар, и подтвердите удаление\n")
                         short_description_db()
                         value_id = input("Введите ID товара: ")
-                        v = input(f"Вы точно хотите удалить товар по ID -> {value_id}?\nЕсли Да, нажмите -> 1.\nЕсли Нет -> 2.\nВвод: ")
-                        if v == "1":
-                            delete.delete_method(value_id)
+                        if value_id in backend_info.DB.keys():
+                            v = input(f"Вы точно хотите удалить товар по ID -> {value_id}?\nЕсли Да, нажмите -> 1.\nЕсли Нет -> 2.\nВвод: ")
+                            if v == "1":
+                                delete.delete_method(value_id)
+                                print("Товар был успешно удален")
                         else:
-                            print("Удаление было прервано...")
+                            print("Удаление было прервано.")
                     case "4":
                         SearchProduct.search_product_to_id()
                     case "5":
-                        SaveData.SaveData.save_all_data_in_db()
-                        SaveData.SaveData.read_db()
+                        save_data.SaveData.save_all_data_in_db()
+                        save_data.SaveData.read_db()
+                        print("\n------------------------------------------------------------------------------\n"
+                              "                     Все данные были успешно сохранены :)\n"
+                              "------------------------------------------------------------------------------\n")
                     case "6":
                         break
