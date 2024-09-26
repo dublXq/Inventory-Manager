@@ -1,11 +1,13 @@
 import backend_info
 import save_data
 
+
 def short_description_db():
     for key, el1 in backend_info.BackendInfo.DB.items():
         print("-------------------------------------"
-        "\n| " + str(key) + " | Название: " + el1[0] + f" | Бренд: {el1[2]}\n"
-        f"-------------------------------------")
+              "\n| " + str(key) + " | Название: " + el1[0] + f" | Бренд: {el1[2]}\n"
+                                                             f"-------------------------------------")
+
 
 class MainBackendProject:
 
@@ -33,8 +35,8 @@ class MainBackendProject:
                 opt_price_product, retail_price_product):
             # Если все хорошо, тогда переменной TIME_VALUE присваиваем строку значений через "|"
             backend_info.BackendInfo.time_value = (f"{name_product}|{amount_product}|"
-                               f"{brand_product}|{opt_price_product}|"
-                               f"{retail_price_product}")
+                                                   f"{brand_product}|{opt_price_product}|"
+                                                   f"{retail_price_product}")
             return backend_info.BackendInfo.time_value
         else:
             print("Проверьте пожалуйста еще раз, все ли вы правильно прописали. Возникла синтаксическая ошибка")
@@ -104,6 +106,7 @@ class CheckType(MainBackendProject):
                 and opt.isdigit() and retail.isdigit()):
             return True
 
+
 class DeleteProduct:
 
     @staticmethod
@@ -133,7 +136,7 @@ class RedactProduct:
             print("Вы ввели что-то не так. Напоминаем что вы должны выбрать в пределах диапазона 1-6."
                   "\nПовторите попытку")
         else:
-            if word_db not in ["1","2","3","4","5","6"]:
+            if word_db not in ["1", "2", "3", "4", "5", "6"]:
                 print("Вы вышли за диапазон. Повторите пожалуйста попытку")
             else:
                 for key, item in time_dict.items():
@@ -190,17 +193,16 @@ class AddProduct(CheckType, MainBackendProject):
     def add_get_product(key):
         return backend_info.BackendInfo.DB[key]
 
-if __name__ == '__main__':
 
+if __name__ == '__main__':
     class Main(AddProduct, RedactProduct, DeleteProduct, CheckType, SearchProduct, MainBackendProject):
         backend = MainBackendProject()
         delete = DeleteProduct()
         backend_info = backend_info.BackendInfo
-
-
-
         save_data.SaveData.read_db()
         save_data.SaveData.write_db(save_data.SaveData.time_result)
+        save_dt = save_data.SaveData()
+        add_product = AddProduct()
 
         print("Добро пожаловать в главное меню! Вас приветствует Менеджер товаров.\n"
               "Я умею: Добавлять товары в БД, удалять по ID, редактировать товары по необходимости\n"
@@ -243,14 +245,14 @@ if __name__ == '__main__':
                               f"------------------------\n")
                         val = input("1.Да\n2.Нет\nВвод: ")
                         if val == "1":
-                            if val in backend_info.DB.keys():
+                            if backend.id_product in backend_info.DB.keys():
                                 print("Ошибка: ID не могут совпадать!")
                             else:
                                 backend.preparation_zip_info_str(
                                     backend.name_product, backend.amount_product, backend.brand_product,
                                     backend.opt_price_product, backend.retail_price_product)
                                 if backend_info.time_value is not None:
-                                    AddProduct.add_set_product(backend.id_product, backend_info.time_value)
+                                    add_product.add_set_product(backend.id_product, backend_info.time_value)
                         elif val == "2":
                             print("Добавление успешно отменено!")
                     case "2":
@@ -276,7 +278,8 @@ if __name__ == '__main__':
                         short_description_db()
                         value_id = input("Введите ID товара: ")
                         if value_id in backend_info.DB.keys():
-                            v = input(f"Вы точно хотите удалить товар по ID -> {value_id}?\nЕсли Да, нажмите -> 1.\nЕсли Нет -> 2.\nВвод: ")
+                            v = input(
+                                f"Вы точно хотите удалить товар по ID -> {value_id}?\nЕсли Да, нажмите -> 1.\nЕсли Нет -> 2.\nВвод: ")
                             if v == "1":
                                 delete.delete_method(value_id)
                                 print("Товар был успешно удален")
@@ -285,8 +288,8 @@ if __name__ == '__main__':
                     case "4":
                         SearchProduct.search_product_to_id()
                     case "5":
-                        save_data.SaveData.save_all_data_in_db()
-                        save_data.SaveData.read_db()
+                        save_dt.save_all_data_in_db()
+                        save_dt.read_db()
                         print("\n------------------------------------------------------------------------------\n"
                               "                     Все данные были успешно сохранены :)\n"
                               "------------------------------------------------------------------------------\n")
