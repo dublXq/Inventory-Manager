@@ -243,11 +243,16 @@ if __name__ == '__main__':
                               f"------------------------\n")
                         val = input("1.Да\n2.Нет\nВвод: ")
                         if val == "1":
-                            backend.preparation_zip_info_str(
-                                backend.name_product, backend.amount_product, backend.brand_product,
-                                backend.opt_price_product, backend.retail_price_product)
-                            if backend_info.time_value is not None:
-                                AddProduct.add_set_product(backend.id_product, backend_info.time_value)
+                            if val in backend_info.DB.keys():
+                                print("Ошибка: ID не могут совпадать!")
+                            else:
+                                backend.preparation_zip_info_str(
+                                    backend.name_product, backend.amount_product, backend.brand_product,
+                                    backend.opt_price_product, backend.retail_price_product)
+                                if backend_info.time_value is not None:
+                                    AddProduct.add_set_product(backend.id_product, backend_info.time_value)
+                        elif val == "2":
+                            print("Добавление успешно отменено!")
                     case "2":
                         print("Мы перешли в раздел -> Редактирования.\n\n"
                               "Для правильного редактирования, следуйте пожалуйста инструкции:\n"
