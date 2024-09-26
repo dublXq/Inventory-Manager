@@ -68,7 +68,7 @@ class SearchProduct(MainBackendProject):
         print("Мы перешли в раздел -> Поиск.\n\n"
               "Для того чтобы найти необходимый Вам товар, пожалуйста, следуйте инструкции:\n"
               "1.Вам будет показано предложено 2 варианта\n"
-              "- Поиск товара по ID (Вы должны знать IDшник товара)\n"
+              "- Поиск товара по ID (Вы должны знать ID товара)\n"
               "- Поиск товара по краткому описанию (Будет вывод всей БД, и вы должны указать номер нужного товара)\n"
               "2.Выберите один из предложенных вариантов, после чего будет произведен поиск\n")
         val = input("1. Поиск товара по ID\n2. Поиск товара по краткому описанию\nВвод: ")
@@ -130,8 +130,14 @@ class RedactProduct:
     def redaction_method(self, word_db):
         self.word_db = word_db
         key = None
-        time_dict = {"1": self.id_product, "2": self.name, "3": self.amount, "4": self.brand, "5": self.opt,
-                     "6": self.retail}
+        time_dict = {
+            "1": self.id_product,
+            "2": self.name,
+            "3": self.amount,
+            "4": self.brand,
+            "5": self.opt,
+            "6": self.retail
+        }
         if word_db is None:
             print("Вы ввели что-то не так. Напоминаем что вы должны выбрать в пределах диапазона 1-6."
                   "\nПовторите попытку")
@@ -145,7 +151,7 @@ class RedactProduct:
                         break
                 word_db = input("Введите новое значение: ")
                 if key == "1":
-                    backend_info.BackendInfo.DB[word_db] = backend_info.BackendInfo.DB.pop(key)
+                    backend_info.BackendInfo.DB[word_db] = backend_info.BackendInfo.DB.pop(self.id_product)
                 else:
                     backend_info.BackendInfo.DB[self.id_product][int(key) - 2] = word_db
                 return backend_info.BackendInfo.DB
